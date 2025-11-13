@@ -2,51 +2,31 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const makerID = "1";
+  const { register, loading } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setMessage("");
 
     try {
-      const response = await fetch("https://learn.smktelkom-mlg.sch.id/kos/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "makerID": makerID, // ✅ header wajib
-        },
-        body: JSON.stringify({
-          email,
-          name,
-          password,
-          phone,
-          role : "society"
-        }),
+      await register({
+        email,
+        name,
+        password,
+        phone,
+        role: "society"
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Register success:", data);
-        // Redirect ke login kalau mau:
-        window.location.href = "/login";
-      } else {
-        setMessage(`Gagal daftar: ${data.message || "Periksa kembali data Anda."}`);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("Terjadi kesalahan pada server.");
-    } finally {
-      setLoading(false);
+      setMessage("✅ Registrasi berhasil! Redirecting to login...");
+    } catch (error: any) {
+      setMessage(`Gagal daftar: ${error.message || "Periksa kembali data Anda."}`);
     }
   };
 

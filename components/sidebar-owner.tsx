@@ -8,7 +8,7 @@ export default function SidebarOwner() {
   const pathname = usePathname();
 
   const menu = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/admin-dashboard", icon: LayoutDashboard },
     { name: "Boarding House", href: "/boarding-house", icon: Home },
     { name: "Settings", href: "/profile_owner", icon: Settings },
   ];

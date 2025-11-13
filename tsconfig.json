@@ -21,7 +21,22 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
+        "./*"
+      ],
+      "@/app/*": [
         "app/*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/lib/*": [
+        "lib/*"
+      ],
+      "@/types/*": [
+        "types/*"
+      ],
+      "@/contexts/*": [
+        "contexts/*"
       ]
     },
     "ignoreDeprecations": "5.0",

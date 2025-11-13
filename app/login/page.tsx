@@ -1,51 +1,24 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const makerID = "1";
+  const { login, loading } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setMessage("");
 
     try {
-      const response = await fetch("https://learn.smktelkom-mlg.sch.id/kos/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "makerID": makerID, // ✅ pakai snake_case
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("✅ Login berhasil!");
-        console.log("Login success:", data);
-
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
-        window.location.href = "/dashboard";
-      } else {
-        setMessage(`Login gagal: ${data.message || "Cek kembali email dan password."}`);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("Terjadi kesalahan pada server.");
-    } finally {
-      setLoading(false);
+      await login({ email, password });
+      setMessage("✅ Login berhasil!");
+    } catch (error: any) {
+      setMessage(`Login gagal: ${error.message || "Cek kembali email dan password."}`);
     }
   };
 

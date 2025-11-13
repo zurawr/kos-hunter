@@ -15,14 +15,14 @@ export default function KostDetailPage() {
   }
 
   return (
-    <div className="flex flex-col items-center py-10 px-6 md:px-20 lg:px-32 text-gray-800">
+    <div className="flex flex-col items-center py-10 px-6 md:px-20 lg:px-32 text-gray-800 bg-white">
       {/* Tombol Kembali */}
       <div className="w-full max-w-3xl mb-6 mr-60">
         <button
           onClick={() => router.push("/dashboard")}
           className="text-sm text-gray-700 border border-gray-400 px-5 py-2 rounded-md hover:bg-gray-100 transition"
         >
-          ← Back to Dashboard
+          ← Back to Dashboard 
         </button>
       </div>
 
@@ -42,9 +42,9 @@ export default function KostDetailPage() {
         <div className="flex flex-col gap-6 text-sm md:text-base">
           <div className="flex items-center gap-3">
             <span className="font-semibold text-gray-700 w-40">
-              rent per mont:
+              rent per month:
             </span>
-            <span className="text-gray-600">{kost.price}</span>
+            <span className="text-gray-600">Rp {kost.price_per_month.toLocaleString()}</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ export default function KostDetailPage() {
 
           <div className="flex items-center gap-3">
             <span className="font-semibold text-gray-700 w-40">
-              tenure in mont:
+              tenure in month:
             </span>
             <div className="flex items-center gap-2">
               <span className="text-gray-600">3</span>
@@ -90,14 +90,14 @@ export default function KostDetailPage() {
           <div className="p-3 border-2 border-black rounded-full flex items-center justify-center">
             <DoorClosed size={28} className="font-bold" />
           </div>
-          <span className="text-sm mt-2">{kost.door} door room </span>
+          <span className="text-sm mt-2">{kost.door} room</span>
         </div>
       </div>
 
       {/* Deskripsi */}
       <div className="w-full mt-10">
         <h2 className="font-semibold text-base md:text-lg mb-3">
-          Description Facilitie:
+          Description Facilities:
         </h2>
         <p className="text-sm md:text-base leading-relaxed text-gray-700 text-justify">
           {kost.description}
@@ -106,7 +106,11 @@ export default function KostDetailPage() {
 
       {/* Tombol Rent */}
       <div className="flex justify-end w-full max-w-3xl mt-12">
-        <button className="border border-gray-400 text-gray-800 px-8 py-3 rounded-md hover:bg-gray-100 transition text-sm md:text-base">
+        <button
+          type="button"
+          onClick={() => router.push("/order_track")}
+          className="border border-gray-400 text-gray-800 px-8 py-3 rounded-md hover:bg-gray-100 transition text-sm md:text-base"
+        >
           Rent Now
         </button>
       </div>

@@ -3,53 +3,43 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Input } from "../../components/ui/input";
-
-interface BoardingHouse {
-  id: number;
-  name: string;
-  address: string;
-  price: string;
-  gender: string;
-  status: string;
-  image: string;
-}
-
-const boardingHouses: BoardingHouse[] = [
-  {
-    id: 1,
-    name: "Cluster Puri Indah II",
-    address: "Jalan Sawojajar, Kota Malang",
-    price: "500K/month",
-    gender: "L",
-    status: "Available",
-    image: "/image/kos.png",
-  },
-  {
-    id: 2,
-    name: "Cluster Puri Indah II",
-    address: "Jalan Sawojajar, Kota Malang",
-    price: "500K/month",
-    gender: "L",
-    status: "Available",
-    image: "/image/kos.png",
-  },
-  {
-    id: 3,
-    name: "Cluster Puri Indah II",
-    address: "Jalan Sawojajar, Kota Malang",
-    price: "500K/month",
-    gender: "L",
-    status: "Available",
-    image: "/image/kos.png",
-  },
-];
+import { useOwnerKos } from "@/lib/hooks";
 
 export default function BoardingHousePage() {
   const [search, setSearch] = useState("");
+  const { kosList, loading, error, refetch } = useOwnerKos();
 
-  const filteredHouses = boardingHouses.filter((house) =>
+  // Filter based on search
+  const filteredHouses = kosList.filter((house) =>
     house.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#419B98] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading boarding houses...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center text-red-500">
+          <p>Error: {error}</p>
+          <button 
+            onClick={() => refetch()} 
+            className="mt-4 px-4 py-2 bg-[#419B98] text-white rounded"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -86,7 +76,7 @@ export default function BoardingHousePage() {
           >
             <div className="flex items-center gap-3">
               <Image
-                src={house.image}
+                src={house.images?.[0]?.image_url || "/image/kos.png"}
                 alt={house.name}
                 width={50}
                 height={50}
@@ -95,14 +85,10 @@ export default function BoardingHousePage() {
               <span>{house.name}</span>
             </div>
             <span className="truncate">{house.address}</span>
-            <span>{house.price}</span>
-            <span>{house.gender}</span>
-            <span
-              className={`${
-                house.status === "Available" ? "text-green-600" : "text-red-500"
-              }`}
-            >
-              {house.status}
+            <span>Rp {typeof house.price_per_month === 'number' ? house.price_per_month.toLocaleString() : house.price_per_month}/month</span>
+            <span className="uppercase">{house.gender === 'male' ? 'L' : house.gender === 'female' ? 'P' : 'All'}</span>
+            <span className="text-green-600">
+              Available
             </span>
             <div></div>
           </div>

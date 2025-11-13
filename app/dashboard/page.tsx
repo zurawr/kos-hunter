@@ -3,17 +3,41 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Bed, Bath, DoorClosed, MessageSquare } from "lucide-react";
-import { useEffect, useState } from "react";
-import { kostData } from "@/data/kosData";
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { kostData } from "@/data/kosData";
 
 export default function DashboardUser() {
-  const [kostList, setKostList] = useState<any[]>([]);
+  const { user, isAuthenticated, loading } = useAuth();
+  const router = useRouter();
+  const kosList = kostData;
 
-  useEffect(() => {
-    setKostList(kostData);
-  }, []);
+  // // // Proteksi route - hanya untuk user society
+  // // useEffect(() => {
+  // //   if (!loading) {
+  // //     if (!isAuthenticated) {
+  // //       router.push("/login");
+  // //     } else if (user?.role === "owner") {
+  // //       // Redirect owner ke admin dashboard
+  // //       router.push("/admin-dashboard");
+  // //     }
+  // //   }
+  // // }, [user, isAuthenticated, loading, router]);
+
+  // if (loading) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#419B98]"></div>
+  //     </div>
+  //   );
+  // }
+
+  // if (!isAuthenticated || user?.role !== "society") {
+  //   return null;
+  // }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,7 +50,7 @@ export default function DashboardUser() {
       {/* Konten utama (Card Kost) */}
       <main className="flex-1 bg-white py-10 px-20">
         <div className="grid grid-cols-3 gap-8">
-          {kostList.map((kost) => (
+          {kosList.map((kost) => (
             <div
               key={kost.id}
               className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition transform duration-200"
@@ -41,7 +65,7 @@ export default function DashboardUser() {
                   className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-3 right-3 bg-[#419B98] text-white px-4 py-1.5 rounded-lg text-sm font-semibold shadow-md">
-                  {kost.price}
+                  Rp {kost.price_per_month.toLocaleString()}/bulan
                 </div>
               </div>
 
@@ -50,7 +74,7 @@ export default function DashboardUser() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">
                   {kost.name}
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">{kost.location}</p>
+                <p className="text-sm text-gray-500 mb-4">{kost.address}</p>
 
                 <hr className="mb-4 border-gray-200" />
 
@@ -58,15 +82,15 @@ export default function DashboardUser() {
                 <div className="flex justify-center items-center gap-8 text-gray-600 text-sm mb-5">
                   <div className="flex items-center gap-1.5">
                     <Bed size={17} />
-                    <span>{kost.bed}</span>
+                    <span>{kost.facilities} facilities</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Bath size={17} />
-                    <span>{kost.bath}</span>
+                    <span>{kost.gender}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <DoorClosed size={17} />
-                    <span>{kost.door}</span>
+                    <span>{kost.photos} photos</span>
                   </div>
                 </div>
 
@@ -74,7 +98,7 @@ export default function DashboardUser() {
                 <div className="flex flex-row justify-between items-center">
                   <button className="flex items-center gap-2 border border-gray-300 px-3 py-1.5 rounded-md text-gray-700 hover:bg-gray-100 transition text-sm">
                     <MessageSquare size={16} />
-                    ask for subs
+                    Contact Owner
                   </button>
 
                   {/* Link ke detail per ID */}
